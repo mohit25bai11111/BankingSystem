@@ -15,7 +15,7 @@
 | **Registration Number** | 25BAI11111 |
 | **Course Code** | CSE2006 — Programming in Java |
 | **Semester** | Fall Semester 2026–27 |
-| **Institution** | VIT Bhopal University-VITyarthi Programme |
+| **Institution** | VIT -VITyarthi Programme |
 | **Project Category** | Command-Line Interface (CLI) Application |
 | **Submission Type** | Flipped Course Evaluation |
 
