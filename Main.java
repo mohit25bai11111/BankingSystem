@@ -2,7 +2,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    // ANSI Terminal Formatting Palette
     private static final String RESET = "\u001B[0m";
     private static final String BOLD = "\u001B[1m";
     private static final String RED = "\u001B[31m";
@@ -11,6 +10,9 @@ public class Main {
     private static final String BLUE = "\u001B[34m";
     private static final String PURPLE = "\u001B[35m";
     private static final String CYAN = "\u001B[36m";
+
+    // Safe fallback for terminal emoji encoding on Windows PowerShell
+    private static final String BANNER_ICON = System.getProperty("os.name").toLowerCase().contains("win") ? "[BANK]" : "🏦";
 
     public static void main(String[] args) {
         BankService bankService = new BankService();
@@ -24,11 +26,12 @@ public class Main {
             System.out.println(CYAN + "│ " + BOLD + "[3]" + RESET + " Withdraw Cash (PIN Required)                      │");
             System.out.println(CYAN + "│ " + BOLD + "[4]" + RESET + " Inter-Account Fund Transfer (PIN Required)        │");
             System.out.println(CYAN + "│ " + BOLD + "[5]" + RESET + " Account Summary & Balance Inquiry (PIN Required)  │");
-            System.out.println(CYAN + "│ " + BOLD + "[6]" + RESET + " View Passbook / Audit Trail (PIN Required)        │");
-            System.out.println(CYAN + "│ " + BOLD + "[7]" + RESET + " Bank Manager Portal (Admin Mode)                  │");
-            System.out.println(CYAN + "│ " + BOLD + "[8]" + RESET + " Exit System                                       │");
+            System.out.println(CYAN + "│ " + BOLD + "[6]" + RESET + " View Passbook & Export Statement (PIN Required)   │");
+            System.out.println(CYAN + "│ " + BOLD + "[7]" + RESET + " Loan EMI Calculator Utility                       │");
+            System.out.println(CYAN + "│ " + BOLD + "[8]" + RESET + " Bank Manager Portal (Admin Mode)                  │");
+            System.out.println(CYAN + "│ " + BOLD + "[9]" + RESET + " Exit System                                       │");
             System.out.println(CYAN + "└────────────────────────────────────────────────────────┘" + RESET);
-            System.out.print(YELLOW + BOLD + "Select Operation [1-8]: " + RESET);
+            System.out.print(YELLOW + BOLD + "Select Operation [1-9]: " + RESET);
 
             int choice = -1;
             if (scanner.hasNextInt()) {
@@ -134,18 +137,50 @@ public class Main {
                         for (Transaction t : txns) {
                             System.out.printf("%-10s | %-19s | $%-10.2f | %s\n", t.getTransactionId(), t.getType(), t.getAmount(), t.getTimestamp());
                         }
+
+                        System.out.print(YELLOW + "\nExport passbook to file statement_" + accNum + ".txt? (y/n): " + RESET);
+                        String confirm = scanner.nextLine();
+                        if ("y".equalsIgnoreCase(confirm)) {
+                            if (bankService.exportStatement(accNum)) {
+                                System.out.println(GREEN + "✔ Statement exported successfully." + RESET);
+                            } else {
+                                System.out.println(RED + "✖ Failed to export statement." + RESET);
+                            }
+                        }
                     } else {
                         System.out.println(RED + "✖ Authentication failed! Access denied." + RESET);
                     }
                 }
                 case 7 -> {
+                    System.out.println(PURPLE + BOLD + "\n--- LOAN EMI CALCULATOR ---" + RESET);
+                    System.out.print("Enter Loan Amount ($): ");
+                    double principal = scanner.nextDouble();
+                    System.out.print("Enter Annual Interest Rate (%): ");
+                    double annualRate = scanner.nextDouble();
+                    System.out.print("Enter Tenure (Months): ");
+                    int tenure = scanner.nextInt();
+                    scanner.nextLine();
+
+                    double monthlyRate = (annualRate / 12) / 100;
+                    double emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
+                    double totalPayment = emi * tenure;
+
+                    System.out.println(BLUE + "┌──────────────────────────────────────────────┐" + RESET);
+                    System.out.println(BLUE + "│ " + BOLD + "Monthly EMI:   " + RESET + GREEN + String.format("$%-29.2f", emi) + BLUE + "│" + RESET);
+                    System.out.println(BLUE + "│ " + BOLD + "Total Payment: " + RESET + String.format("$%-29.2f", totalPayment) + BLUE + "│" + RESET);
+                    System.out.println(BLUE + "└──────────────────────────────────────────────┘" + RESET);
+                }
+                case 8 -> {
                     System.out.println(PURPLE + BOLD + "\n--- ADMIN MANAGER PORTAL ---" + RESET);
                     System.out.print("Enter Admin Access Key (Default: admin123): ");
                     String key = scanner.nextLine();
 
                     if ("admin123".equals(key)) {
                         System.out.println(GREEN + "✔ Admin authentication granted." + RESET);
-                        System.out.println("[1] View Total Bank Liquidity\n[2] Unlock Account");
+                        System.out.println("[1] View Total Bank Liquidity");
+                        System.out.println("[2] Unlock Account");
+                        System.out.println("[3] Batch Credit Interest to SAVINGS Accounts");
+                        System.out.print("Select Admin Choice: ");
                         int adminChoice = scanner.nextInt();
                         scanner.nextLine();
 
@@ -156,20 +191,26 @@ public class Main {
                             System.out.print("Enter Account Number to Unlock: ");
                             String target = scanner.nextLine();
                             if (bankService.unlockAccount(target)) {
-                                System.out.println(GREEN + "✔ Account " + target + " is unlocked." + RESET);
+                                System.out.println(GREEN + "✔ Account " + target + " unlocked." + RESET);
                             } else {
                                 System.out.println(RED + "✖ Unlock failed. Account not found or not locked." + RESET);
                             }
+                        } else if (adminChoice == 3) {
+                            System.out.print("Enter Annual Interest Rate (%): ");
+                            double rate = scanner.nextDouble();
+                            scanner.nextLine();
+                            int updated = bankService.creditInterest(rate);
+                            System.out.println(GREEN + "✔ Interest credited to " + updated + " SAVINGS account(s)." + RESET);
                         }
                     } else {
                         System.out.println(RED + "✖ Invalid admin credentials!" + RESET);
                     }
                 }
-                case 8 -> {
+                case 9 -> {
                     System.out.println(YELLOW + "Persisting state and terminating... Goodbye!" + RESET);
                     return;
                 }
-                default -> System.out.println(RED + "Invalid choice! Enter 1-8." + RESET);
+                default -> System.out.println(RED + "Invalid choice! Enter 1-9." + RESET);
             }
             System.out.println();
         }
@@ -178,7 +219,7 @@ public class Main {
     private static void printBanner() {
         System.out.println(CYAN + BOLD);
         System.out.println("==========================================================");
-        System.out.println("          🏦 ADVANCED SECURE BANKING SYSTEM CLI           ");
+        System.out.println("     " + BANNER_ICON + " ADVANCED SECURE BANKING SYSTEM CLI           ");
         System.out.println("==========================================================" + RESET);
     }
 }
