@@ -1,10 +1,27 @@
-# 🏦 Java CLI Bank Management System
+# 🏦 Bank Management System (Java CLI)
 
-> **An automated, lightweight, terminal-driven banking application built with Core Java and persistent CSV storage.**
+**An Automated, Zero-Dependency Banking System with CSV Data Persistence**
+
+![Java](https://img.shields.io/badge/Java-17%2B-orange) ![Interface](https://img.shields.io/badge/Interface-CLI-blue) ![Project](https://img.shields.io/badge/Project-VITyarthi--Evaluation-purple) ![Persistence](https://img.shields.io/badge/Storage-CSV-green)
 
 ---
 
-## 📖 Project Overview
+# 👤 Project & Author Details
+
+| Detail | Information |
+| :--- | :--- |
+| **Project Name** | Bank Management System (Java CLI) |
+| **Lead Developer** | Mohit Pillai |
+| **Registration Number** | 25BAI11111 |
+| **Course Code** | CSE2006 — Programming in Java |
+| **Semester** | Fall Semester 2026–27 |
+| **Institution** | VIT Bhopal University-VITyarthi Programme |
+| **Project Category** | Command-Line Interface (CLI) Application |
+| **Submission Type** | Flipped Course Evaluation |
+
+---
+
+# 📖 Project Overview
 
 Managing basic account operations shouldn't require heavy database infrastructure or complex Graphical User Interfaces (GUIs). This project provides a pure Java Command-Line Interface (CLI) application that allows users to create accounts, deposit and withdraw funds, check balances, and persist all transactional data locally across sessions.
 
@@ -12,7 +29,7 @@ The system is optimized for automated headless evaluation environments and zero-
 
 ---
 
-## 🎯 Problem Statement
+# 🎯 Problem Statement
 
 Traditional application evaluation environments often face:
 
@@ -132,14 +149,6 @@ Application Exits Gracefully
 
 ---
 
-# 👤 Author Details
-
-| Developer | Project Type | GitHub Username |
-|-----------|--------------|-----------------|
-| **Mohit Pillai** | Individual Project | `mohit25bai11111` |
-
----
-
 # 🚀 Future Enhancements
 
 - 🔒 PIN Authentication for secure account access
@@ -162,6 +171,10 @@ This project is developed for academic evaluation under the **VITyarthi Flipped 
 Version: **v1.0.0**
 
 ---
+
+## 💡 Goal
+
+> **"Build a robust, zero-dependency Java CLI banking system with automatic file persistence tailored for headless execution."**
 
 ## 💡 Goal
 
