@@ -27,7 +27,7 @@ public class BankService {
         Account acc = accounts.get(accNum);
         if (acc == null || acc.isLocked()) return false;
         boolean authenticated = acc.validatePin(pin);
-        saveAccounts(); // Save state update for failed attempts / auto-lock
+        saveAccounts(); 
         return authenticated;
     }
 
@@ -78,6 +78,50 @@ public class BankService {
             }
         }
         return history;
+    }
+
+    // Export passbook history to a local text file
+    public boolean exportStatement(String accNum) {
+        Account acc = accounts.get(accNum);
+        if (acc == null) return false;
+        List<Transaction> history = getPassbook(accNum);
+        String filename = "statement_" + accNum + ".txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            writer.println("==================================================");
+            writer.println("            OFFICIAL BANK STATEMENT               ");
+            writer.println("==================================================");
+            writer.println("Account Number: " + acc.getAccountNumber());
+            writer.println("Account Holder: " + acc.getAccountHolder());
+            writer.println("Account Type:   " + acc.getAccountType());
+            writer.println("Current Balance: $" + String.format("%.2f", acc.getBalance()));
+            writer.println("--------------------------------------------------");
+            for (Transaction t : history) {
+                writer.printf("%-10s | %-19s | $%-10.2f | %s\n",
+                    t.getTransactionId(), t.getType(), t.getAmount(), t.getTimestamp());
+            }
+            writer.println("==================================================");
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    // Credit interest percentage to all active SAVINGS accounts
+    public int creditInterest(double ratePercentage) {
+        int count = 0;
+        for (Account acc : accounts.values()) {
+            if ("SAVINGS".equalsIgnoreCase(acc.getAccountType()) && !acc.isLocked()) {
+                double interest = acc.getBalance() * (ratePercentage / 100.0);
+                if (interest > 0) {
+                    acc.deposit(interest);
+                    recordTransaction(acc.getAccountNumber(), "INTEREST_CREDIT", interest);
+                    count++;
+                }
+            }
+        }
+        if (count > 0) saveAccounts();
+        return count;
     }
 
     public boolean unlockAccount(String accNum) {
