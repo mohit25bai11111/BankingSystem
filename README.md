@@ -65,3 +65,104 @@ Our solution provides a zero-dependency, pure Core Java CLI application with bui
                   ▼                     ▼
              Account.java         accounts.csv
              (Data Model)     (Persistent Storage)
+```
+
+---
+
+# 🛠️ Tech Stack
+
+| Category | Technology |
+|-----------|------------|
+| Language | Core Java (JDK 17+) |
+| Storage | CSV File Persistence |
+| Interface | Command Line Interface (CLI) |
+| Architecture | Object-Oriented Programming (OOP) |
+| Version Control | Git & GitHub |
+
+---
+
+# 📂 Project Structure
+
+```text
+BankingSystem/
+│
+├── Account.java        # Account model & CSV serializer
+├── BankService.java    # Business logic & file persistence
+├── Main.java           # CLI menu execution engine
+├── accounts.csv        # Persistent storage file
+└── README.md           # Project documentation
+```
+
+---
+
+# 🔄 Project Workflow
+
+```text
+System Launched via Terminal
+            │
+            ▼
+BankService loads existing data from accounts.csv
+            │
+            ▼
+Interactive Menu Presented (Options 1-5)
+            │
+            ▼
+User Performs Transaction (Deposit / Withdraw / Balance)
+            │
+            ▼
+In-Memory Account State Updated
+            │
+            ▼
+Data Serialized & Written to accounts.csv
+            │
+            ▼
+Application Exits Gracefully
+```
+
+---
+
+# 🚀 Build & Execution Instructions
+
+| Step | Command | Description |
+|------|---------|-------------|
+| 1. Clone Repo | `git clone https://github.com/mohit25bai11111/BankingSystem.git` | Downloads repository |
+| 2. Navigate | `cd BankingSystem` | Opens project directory |
+| 3. Compile | `javac *.java` | Compiles all source files |
+| 4. Execute | `java Main` | Launches the CLI application |
+
+---
+
+# 👤 Author Details
+
+| Developer | Project Type | GitHub Username |
+|-----------|--------------|-----------------|
+| **Mohit Pillai** | Individual Project | `mohit25bai11111` |
+
+---
+
+# 🚀 Future Enhancements
+
+- 🔒 PIN Authentication for secure account access
+- 💸 Inter-account fund transfer capabilities
+- 📜 Timestamped audit log exports (`audit.log`)
+- 🗄️ Embedded SQLite database integration
+
+---
+
+# 📜 License & Context
+
+This project is developed for academic evaluation under the **VITyarthi Flipped Course Evaluation System**.
+
+---
+
+# ⭐ Project Status
+
+✅ **Completed & Verified**
+
+Version: **v1.0.0**
+
+---
+
+## 💡 Goal
+
+> **"Build a robust, zero-dependency Java CLI banking system with automatic file persistence tailored for headless execution."**
