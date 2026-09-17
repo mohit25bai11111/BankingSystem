@@ -11,7 +11,6 @@ public class Main {
     private static final String PURPLE = "\u001B[35m";
     private static final String CYAN = "\u001B[36m";
 
-    // Safe fallback for terminal emoji encoding on Windows PowerShell
     private static final String BANNER_ICON = System.getProperty("os.name").toLowerCase().contains("win") ? "[BANK]" : "🏦";
 
     public static void main(String[] args) {
@@ -48,7 +47,7 @@ public class Main {
                     String name = scanner.nextLine();
                     System.out.print("Account Type (SAVINGS/CHECKING): ");
                     String type = scanner.nextLine();
-                    System.out.print("Initial Deposit Amount: ");
+                    System.out.print("Initial Deposit Amount (Rs.): ");
                     double bal = scanner.nextDouble();
                     scanner.nextLine();
                     System.out.print("Set 4-Digit Security PIN: ");
@@ -64,7 +63,7 @@ public class Main {
                     System.out.println(PURPLE + BOLD + "\n--- DEPOSIT MODULE ---" + RESET);
                     System.out.print("Account Number: ");
                     String accNum = scanner.nextLine();
-                    System.out.print("Deposit Amount: ");
+                    System.out.print("Deposit Amount (Rs.): ");
                     double amt = scanner.nextDouble();
 
                     if (bankService.deposit(accNum, amt)) {
@@ -79,7 +78,7 @@ public class Main {
                     String accNum = scanner.nextLine();
                     System.out.print("Enter PIN: ");
                     String pin = scanner.nextLine();
-                    System.out.print("Withdrawal Amount: ");
+                    System.out.print("Withdrawal Amount (Rs.): ");
                     double amt = scanner.nextDouble();
 
                     if (bankService.withdraw(accNum, amt, pin)) {
@@ -96,7 +95,7 @@ public class Main {
                     String pin = scanner.nextLine();
                     System.out.print("Receiver Account Number: ");
                     String receiver = scanner.nextLine();
-                    System.out.print("Transfer Amount: ");
+                    System.out.print("Transfer Amount (Rs.): ");
                     double amt = scanner.nextDouble();
 
                     if (bankService.transfer(sender, receiver, amt, pin)) {
@@ -117,7 +116,7 @@ public class Main {
                         System.out.println(BLUE + "┌──────────────────────────────────────────────┐" + RESET);
                         System.out.println(BLUE + "│ " + BOLD + "Holder:   " + RESET + String.format("%-34s", acc.getAccountHolder()) + BLUE + "│" + RESET);
                         System.out.println(BLUE + "│ " + BOLD + "Type:     " + RESET + String.format("%-34s", acc.getAccountType()) + BLUE + "│" + RESET);
-                        System.out.println(BLUE + "│ " + BOLD + "Balance:  " + RESET + GREEN + String.format("$%-33.2f", acc.getBalance()) + BLUE + "│" + RESET);
+                        System.out.println(BLUE + "│ " + BOLD + "Balance:  " + RESET + GREEN + String.format("Rs. %-29.2f", acc.getBalance()) + BLUE + "│" + RESET);
                         System.out.println(BLUE + "└──────────────────────────────────────────────┘" + RESET);
                     } else {
                         System.out.println(RED + "✖ Authentication failed! Access denied." + RESET);
@@ -132,10 +131,10 @@ public class Main {
 
                     if (bankService.authenticate(accNum, pin)) {
                         List<Transaction> txns = bankService.getPassbook(accNum);
-                        System.out.println(BOLD + "\nID         | TYPE                | AMOUNT      | TIMESTAMP" + RESET);
+                        System.out.println(BOLD + "\nID         | TYPE                | AMOUNT (Rs.) | TIMESTAMP" + RESET);
                         System.out.println("-------------------------------------------------------------------");
                         for (Transaction t : txns) {
-                            System.out.printf("%-10s | %-19s | $%-10.2f | %s\n", t.getTransactionId(), t.getType(), t.getAmount(), t.getTimestamp());
+                            System.out.printf("%-10s | %-19s | Rs. %-8.2f | %s\n", t.getTransactionId(), t.getType(), t.getAmount(), t.getTimestamp());
                         }
 
                         System.out.print(YELLOW + "\nExport passbook to file statement_" + accNum + ".txt? (y/n): " + RESET);
@@ -153,7 +152,7 @@ public class Main {
                 }
                 case 7 -> {
                     System.out.println(PURPLE + BOLD + "\n--- LOAN EMI CALCULATOR ---" + RESET);
-                    System.out.print("Enter Loan Amount ($): ");
+                    System.out.print("Enter Loan Amount (Rs.): ");
                     double principal = scanner.nextDouble();
                     System.out.print("Enter Annual Interest Rate (%): ");
                     double annualRate = scanner.nextDouble();
@@ -166,8 +165,8 @@ public class Main {
                     double totalPayment = emi * tenure;
 
                     System.out.println(BLUE + "┌──────────────────────────────────────────────┐" + RESET);
-                    System.out.println(BLUE + "│ " + BOLD + "Monthly EMI:   " + RESET + GREEN + String.format("$%-29.2f", emi) + BLUE + "│" + RESET);
-                    System.out.println(BLUE + "│ " + BOLD + "Total Payment: " + RESET + String.format("$%-29.2f", totalPayment) + BLUE + "│" + RESET);
+                    System.out.println(BLUE + "│ " + BOLD + "Monthly EMI:   " + RESET + GREEN + String.format("Rs. %-25.2f", emi) + BLUE + "│" + RESET);
+                    System.out.println(BLUE + "│ " + BOLD + "Total Payment: " + RESET + String.format("Rs. %-25.2f", totalPayment) + BLUE + "│" + RESET);
                     System.out.println(BLUE + "└──────────────────────────────────────────────┘" + RESET);
                 }
                 case 8 -> {
@@ -186,7 +185,7 @@ public class Main {
 
                         if (adminChoice == 1) {
                             double total = bankService.getAllAccounts().values().stream().mapToDouble(Account::getBalance).sum();
-                            System.out.println(BOLD + "Total Liquidity Managed: " + GREEN + "$" + total + RESET);
+                            System.out.println(BOLD + "Total Liquidity Managed: " + GREEN + "Rs. " + String.format("%.2f", total) + RESET);
                         } else if (adminChoice == 2) {
                             System.out.print("Enter Account Number to Unlock: ");
                             String target = scanner.nextLine();

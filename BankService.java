@@ -94,10 +94,10 @@ public class BankService {
             writer.println("Account Number: " + acc.getAccountNumber());
             writer.println("Account Holder: " + acc.getAccountHolder());
             writer.println("Account Type:   " + acc.getAccountType());
-            writer.println("Current Balance: $" + String.format("%.2f", acc.getBalance()));
+            writer.println("Current Balance: Rs. " + String.format("%.2f", acc.getBalance()));
             writer.println("--------------------------------------------------");
             for (Transaction t : history) {
-                writer.printf("%-10s | %-19s | $%-10.2f | %s\n",
+                writer.printf("%-10s | %-19s | Rs. %-8.2f | %s\n",
                     t.getTransactionId(), t.getType(), t.getAmount(), t.getTimestamp());
             }
             writer.println("==================================================");
